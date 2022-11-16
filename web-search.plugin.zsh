@@ -6,7 +6,6 @@ function web_search() {
   # define search engine URLS
   typeset -A urls
   urls=(
-    $ZSH_WEB_SEARCH_ENGINES
     google          "https://www.google.com/search?q="
     bing            "https://www.bing.com/search?q="
     brave           "https://search.brave.com/search?q="
@@ -37,14 +36,18 @@ function web_search() {
   if [[ $# -gt 1 ]]; then
     # build search url:
     # join arguments passed with '+', then append to search engine URL
-    url="${urls[$1]}$(omz_urlencode ${@[2,-1]})"
+    url="${urls[$1]}${(j:+:)@[2,-1]}"
   else
     # build main page url:
     # split by '/', then rejoin protocol (1) and domain (2) parts with '//'
     url="${(j://:)${(s:/:)urls[$1]}[1,2]}"
   fi
 
-  open_command "$url"
+  if [[ -v $BROWSER ]] then
+    $BROWSER "$url"
+  else
+    echo "\$BROWSER is not set!"
+  fi
 }
 
 alias bing='web_search bing'
