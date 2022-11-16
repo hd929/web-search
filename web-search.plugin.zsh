@@ -43,7 +43,7 @@ function web_search() {
     url="${(j://:)${(s:/:)urls[$1]}[1,2]}"
   fi
 
-  if [[ -v $BROWSER ]] then
+  if [[ -v BROWSER ]] then
     $BROWSER "$url"
   else
     echo "\$BROWSER is not set!"
